@@ -1,0 +1,63 @@
+--- build/config/BUILDCONFIG.gn.orig	2021-12-16 22:49:58.000000000 +0100
++++ build/config/BUILDCONFIG.gn	2021-12-17 08:56:43.800256000 +0100
+@@ -131,11 +131,12 @@ declare_args() {
+   is_official_build = false
+ 
+   # Whether we're a traditional desktop unix.
+-  is_desktop_linux = current_os == "linux"
++  is_desktop_linux = current_os == "linux" || current_os == "freebsd"
+ 
+   # Set to true when compiling with the Clang compiler. Typically this is used
+   # to configure warnings.
+   is_clang =
++      current_os == "freebsd" ||
+       current_os == "mac" || current_os == "ios" || current_os == "chromeos" ||
+       current_os == "fuchsia" || current_os == "android" ||
+       current_os == "win" ||
+@@ -190,8 +191,8 @@ if (host_toolchain == "") {
+   # TODO(dpranke): Add some sort of assert here that verifies that
+   # no toolchain omitted host_toolchain from its toolchain_args().
+ 
+-  if (host_os == "linux") {
+-    if (target_os != "linux") {
++  if (host_os == "linux" || host_os == "freebsd") {
++    if (target_os != "linux" && target_os != "freebsd") {
+       # TODO(dpranke) - is_clang normally applies only to the target
+       # build, and there is no way to indicate that you want to override
+       # it for both the target build *and* the host build. Do we need to
+@@ -231,7 +232,7 @@ if (target_os == "android") {
+   assert(host_os == "linux" || host_os == "mac",
+          "Android builds are only supported on Linux and Mac hosts.")
+   _default_toolchain = "//build/toolchain/android:android_clang_$target_cpu"
+-} else if (target_os == "chromeos" || target_os == "linux") {
++} else if (target_os == "chromeos" || target_os == "linux" || target_os == "freebsd") {
+   # See comments in build/toolchain/cros/BUILD.gn about board compiles.
+   if (is_clang) {
+     _default_toolchain = "//build/toolchain/linux:clang_$target_cpu"
+@@ -367,7 +368,7 @@ if (current_os == "win" || current_os == "winuwp") {
+   is_nacl = false
+   is_posix = true
+   is_win = false
+-} else if (current_os == "linux") {
++} else if (current_os == "linux" || current_os == "freebsd") {
+   is_android = false
+   is_chromeos = false
+   is_fuchsia = false
+@@ -389,6 +390,8 @@ if (current_os == "win" || current_os == "winuwp") {
+   is_win = false
+ }
+ 
++is_bsd = current_os == "freebsd"
++
+ # =============================================================================
+ # SOURCES FILTERS
+ # =============================================================================
+@@ -492,7 +495,7 @@ if (!is_chromeos) {
+ # (FreeBSD, etc.) toolkits, (X11, GTK, etc.), or features. For these cases,
+ # write a conditional in the target to remove the file(s) from the list when
+ # your platform/toolkit/feature doesn't apply.
+-set_sources_assignment_filter(sources_assignment_filter)
++# set_sources_assignment_filter(sources_assignment_filter)
+ 
+ # =============================================================================
+ # TARGET DEFAULTS

@@ -1,0 +1,10 @@
+--- build/toolchain/linux/BUILD.gn.orig	2021-12-16 22:49:58.000000000 +0100
++++ build/toolchain/linux/BUILD.gn	2021-12-16 22:51:49.759906000 +0100
+@@ -14,7 +14,6 @@ clang_toolchain("clang_arm") {
+ }
+ 
+ clang_toolchain("clang_arm64") {
+-  toolprefix = "aarch64-linux-gnu-"
+   toolchain_args = {
+     current_cpu = "arm64"
+     current_os = "linux"

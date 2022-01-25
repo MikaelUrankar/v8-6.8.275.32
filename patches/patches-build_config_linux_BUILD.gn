@@ -1,0 +1,11 @@
+--- build/config/linux/BUILD.gn	2022-01-25 13:26:26.000000000 +0100
++++ build/config/linux/BUILD.gn	2021-12-17 08:59:46.442287000 +0100
+@@ -27,7 +27,7 @@ config("runtime_library") {
+     defines = [ "OS_CHROMEOS" ]
+   }
+ 
+-  if ((!is_chromeos || default_toolchain != "//build/toolchain/cros:target") &&
++  if (!is_bsd && (!is_chromeos || default_toolchain != "//build/toolchain/cros:target") &&
+       (!use_custom_libcxx || current_cpu == "mipsel")) {
+     libs = [ "atomic" ]
+   }

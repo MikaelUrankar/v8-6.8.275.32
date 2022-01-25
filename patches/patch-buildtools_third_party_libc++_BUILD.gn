@@ -1,0 +1,12 @@
+--- buildtools/third_party/libc++/BUILD.gn.orig	2021-12-16 22:49:58.000000000 +0100
++++ buildtools/third_party/libc++/BUILD.gn	2021-12-16 22:56:46.470910000 +0100
+@@ -14,7 +14,8 @@ config("config") {
+     # implementation.
+     cflags += [ "-Wno-macro-redefined" ]
+   } else {
+-    cflags += [ "-fPIC" ]
++    cflags += [ "-fPIC",
++    "-I/usr/local/include", ]
+   }
+ }
+ 

@@ -1,0 +1,38 @@
+--- build/config/compiler/BUILD.gn.orig	2021-12-16 22:49:58.000000000 +0100
++++ build/config/compiler/BUILD.gn	2021-12-17 08:55:52.046299000 +0100
+@@ -721,7 +721,7 @@ config("compiler_cpu_abi") {
+         cflags += [ "-mtune=$arm_tune" ]
+       }
+     } else if (current_cpu == "arm64") {
+-      if (is_clang && !is_android && !is_nacl && !is_fuchsia) {
++      if (!is_bsd && is_clang && !is_android && !is_nacl && !is_fuchsia) {
+         cflags += [ "--target=aarch64-linux-gnu" ]
+         ldflags += [ "--target=aarch64-linux-gnu" ]
+       }
+@@ -1064,7 +1064,7 @@ config("clang_stackrealign") {
+ }
+ 
+ config("clang_revision") {
+-  if (is_clang && clang_base_path == default_clang_base_path) {
++  if (!is_bsd && is_clang && clang_base_path == default_clang_base_path) {
+     update_args = [
+       "--print-revision",
+       "--verify-version=$clang_version",
+@@ -1378,7 +1378,7 @@ config("default_warnings") {
+ 
+     # use_xcode_clang only refers to the iOS toolchain, host binaries use
+     # chromium's clang always.
+-    if (!is_nacl && (!use_xcode_clang || current_toolchain == host_toolchain)) {
++    if (!is_bsd && (!use_xcode_clang || current_toolchain == host_toolchain)) {
+       # Flags NaCl (Clang 3.7) and Xcode 7.3 (Clang clang-703.0.31) do not
+       # recognize.
+       cflags += [
+@@ -2106,7 +2106,7 @@ config("symbols") {
+         # [1] crrev.com/a81d5ade0b043208e06ad71a38bcf9c348a1a52f
+         cflags += [ "-gdwarf-3" ]
+       }
+-      cflags += [ "-g2" ]
++      cflags += [ "-g0" ]
+     }
+     if (use_debug_fission && !is_nacl && !is_android) {
+       # NOTE: Some Chrome OS builds globally set |use_debug_fission| to true,
